@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>wisdom_brain.apps.swagger_docs.views &mdash; liando 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> liando
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">liando</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>wisdom_brain.apps.swagger_docs.views</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for wisdom_brain.apps.swagger_docs.views</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">openapi_codec</span> <span class="k">import</span> <span class="n">encode</span>
+
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">rest_framework.permissions</span> <span class="k">import</span> <span class="n">AllowAny</span>
+<span class="kn">from</span> <span class="nn">rest_framework.renderers</span> <span class="k">import</span> <span class="n">CoreJSONRenderer</span>
+<span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="k">import</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">rest_framework.schemas</span> <span class="k">import</span> <span class="n">SchemaGenerator</span>
+<span class="kn">from</span> <span class="nn">rest_framework.views</span> <span class="k">import</span> <span class="n">APIView</span>
+
+<span class="kn">from</span> <span class="nn">rest_framework_swagger.views</span> <span class="k">import</span> <span class="n">renderers</span>
+
+
+<span class="k">def</span> <span class="nf">_get_custom_responses</span><span class="p">(</span><span class="n">link</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns minimally acceptable responses object based</span>
+<span class="sd">    on action / method type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="s1">&#39;_response_docs&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">link</span><span class="o">.</span><span class="n">_response_docs</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">link</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;post&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;201&#39;</span><span class="p">:</span> <span class="n">template</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">link</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;delete&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;204&#39;</span><span class="p">:</span> <span class="n">template</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;200&#39;</span><span class="p">:</span> <span class="n">template</span><span class="p">}</span>
+
+
+<span class="c1"># monkey patch</span>
+<span class="n">encode</span><span class="o">.</span><span class="n">_get_responses</span> <span class="o">=</span> <span class="n">_get_custom_responses</span>
+
+
+<div class="viewcode-block" id="get_custom_swagger_view"><a class="viewcode-back" href="../../../../wisdom_brain.apps.swagger_docs.html#wisdom_brain.apps.swagger_docs.views.get_custom_swagger_view">[docs]</a><span class="k">def</span> <span class="nf">get_custom_swagger_view</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">patterns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">urlconf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns schema view which renders Swagger/OpenAPI.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">SwaggerSchemaView</span><span class="p">(</span><span class="n">APIView</span><span class="p">):</span>
+        <span class="n">_ignore_model_permissions</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">exclude_from_schema</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">AllowAny</span><span class="p">]</span>
+        <span class="n">renderer_classes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">CoreJSONRenderer</span><span class="p">,</span>
+            <span class="n">renderers</span><span class="o">.</span><span class="n">OpenAPIRenderer</span><span class="p">,</span>
+            <span class="n">renderers</span><span class="o">.</span><span class="n">SwaggerUIRenderer</span>
+        <span class="p">]</span>
+
+        <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+            <span class="n">generator</span> <span class="o">=</span> <span class="n">SchemaGenerator</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                <span class="n">patterns</span><span class="o">=</span><span class="n">patterns</span><span class="p">,</span>
+                <span class="n">urlconf</span><span class="o">=</span><span class="n">urlconf</span>
+            <span class="p">)</span>
+            <span class="n">schema</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">get_schema</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">schema</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span>
+                    <span class="s1">&#39;The schema generator did not return a schema Document&#39;</span>
+                <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">SwaggerSchemaView</span><span class="o">.</span><span class="n">as_view</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, zxs
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

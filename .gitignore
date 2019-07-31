@@ -1,0 +1,22 @@
+# commit ignore
+.DS_Store
+.swp
+.project
+.vscode
+.idea
+
+# python
+*.pyc
+*.pyo
+
+#C
+*.so
+*.o
+*.a
+
+#front_end
+yarn.lock
+yarn-error.log
+node_modules
+
+#django
