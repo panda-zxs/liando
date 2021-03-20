@@ -32,7 +32,7 @@ idna==2.8
 imagesize==1.1.0
 isort==4.3.20
 itypes==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 jmespath==0.9.4
 kombu==4.6.3
 lazy-object-proxy==1.4.1
